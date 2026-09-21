@@ -128,8 +128,9 @@ The project submission includes a screenshot or short screen recording showing N
 **Repository:**
 https://github.com/chonestradacoc-ctrl/NurseMemo
 
-**Live App:**
-*Add your deployed application URL here if available.*
+**Local App:**
+
+`http://localhost:3000/`
 
 ---
 
