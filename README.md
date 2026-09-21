@@ -1,75 +1,73 @@
 # NurseMemo 🩺
 
-### Local AI Nursing Study Assistant powered by Tether QVAC
+### On-Device AI Nursing Study Assistant
 
-NurseMemo is a lightweight nursing study assistant that uses **Tether's QVAC SDK** to run AI directly on the user's device.
+NurseMemo is a lightweight nursing study assistant built with **Tether's QVAC SDK**. It uses local AI to process speech and convert it into text directly on the user's device.
 
-The app focuses on **on-device speech transcription**, allowing users to turn spoken notes into text without sending the audio to a cloud AI service.
-
-> **Local AI • Speech Transcription • Privacy-Focused**
+The project demonstrates how QVAC can be integrated into a practical application while keeping AI inference local.
 
 ---
 
 ## ✨ Features
 
-* 🎙️ **Speech-to-Text** — Transcribe spoken nursing notes using local AI.
-* 🔒 **On-Device AI** — AI inference runs locally through QVAC.
-* 📴 **No Cloud AI API Required** — The app does not send inference requests to an external AI API.
-* 🧠 **Local Model Execution** — QVAC downloads and runs the required model on the user's device.
-* 📚 **Nursing-Focused** — Designed as a simple tool for creating and reviewing nursing-related notes.
-
----
-
-## 🚀 How It Works
-
-NurseMemo uses Tether's QVAC SDK to load an AI model and perform speech transcription locally.
-
-```text
-User Speech
-     │
-     ▼
-NurseMemo
-     │
-     ▼
-QVAC SDK
-     │
-     ▼
-Local AI Model
-     │
-     ▼
-Transcribed Text
-```
-
-The application does not rely on a cloud AI service to perform the transcription.
+* 🎙️ **Speech Transcription** — Converts spoken input into text.
+* 🧠 **Local AI Inference** — Uses an AI model through QVAC on the user's device.
+* 🔒 **Privacy-Focused** — Inference does not require a cloud AI API.
+* 📚 **Nursing-Focused** — Designed for creating and reviewing nursing-related notes.
+* ⚡ **Simple Interface** — Built as a lightweight application for quick use.
 
 ---
 
 ## 🤖 QVAC Integration
 
-NurseMemo uses:
+NurseMemo uses **Tether's QVAC SDK** for local AI inference.
 
-| QVAC Component | Purpose                                       |
-| -------------- | --------------------------------------------- |
-| `loadModel`    | Loads the required AI model on the device     |
-| `transcribe`   | Performs speech-to-text transcription locally |
+### QVAC Functions Used
 
-### QVAC SDK Version
+| Function     | Purpose                    |
+| ------------ | -------------------------- |
+| `loadModel`  | Loads the AI model locally |
+| `transcribe` | Converts speech into text  |
+
+### SDK Version
 
 ```text
 @qvac/sdk 0.19.1
 ```
 
-The QVAC SDK is declared as a project dependency in `package.json`.
+The QVAC SDK is included as a dependency in the project's `package.json`.
 
 ---
 
-## 🛠️ Tech Stack
+## 🔄 How It Works
 
-* **JavaScript**
-* **Node.js**
-* **Tether QVAC SDK**
-* **Local AI inference**
-* **Speech transcription**
+```text
+        User Speech
+             │
+             ▼
+        NurseMemo App
+             │
+             ▼
+          QVAC SDK
+             │
+             ▼
+       Local AI Model
+             │
+             ▼
+      Transcribed Text
+```
+
+The application uses QVAC to perform the AI processing locally instead of sending the inference request to a cloud AI provider.
+
+---
+
+## 🛠️ Built With
+
+* JavaScript
+* Node.js
+* Tether QVAC SDK
+* Local AI inference
+* Speech transcription
 
 ---
 
@@ -88,107 +86,95 @@ cd NurseMemo
 npm install
 ```
 
-The project includes the QVAC SDK as a dependency:
-
-```bash
-npm install @qvac/sdk
-```
-
 ---
 
-## ▶️ Run the App
+## ▶️ Run NurseMemo
 
-Start NurseMemo using the command defined in `package.json`.
+Start the application using:
 
 ```bash
 npm start
 ```
 
-On the first run, QVAC may download the required model and assets needed for local inference.
+On the first run, QVAC may download the required model and assets for local inference.
 
 ---
 
 ## 💻 Requirements
 
-Before running NurseMemo, make sure you have:
+* Node.js
+* npm
+* A supported desktop environment
+* Internet connection for the initial model download
 
-* Node.js installed
-* npm installed
-* A supported Windows, macOS, or Linux environment
-* An internet connection for the initial QVAC model download
-
-After the required model is available locally, inference is performed on the device.
+After the required model is available, AI inference is performed locally through QVAC.
 
 ---
 
-## 🔐 Privacy & Local Processing
+## 🔐 Local AI & Privacy
 
-NurseMemo is designed around local AI processing.
+NurseMemo is designed around **on-device AI processing**.
 
-The speech transcription is performed through the QVAC SDK and its locally running model rather than by sending the inference request to a cloud AI provider.
+The speech transcription functionality uses QVAC and its locally running model rather than relying on a cloud AI inference API.
 
-This means the application does not require a separate cloud AI API key or per-request AI service.
+No separate cloud AI API key is required for the QVAC inference workflow.
 
 ---
 
 ## 🎥 Demo
 
-A screenshot or short screen recording of NurseMemo running with the AI-generated transcription visible is provided as part of the project submission.
-
-**App:**
-[Add your deployed app URL here]
+The project submission includes a screenshot or short screen recording showing NurseMemo running with the AI-generated transcription visible.
 
 **Repository:**
 https://github.com/chonestradacoc-ctrl/NurseMemo
 
+**Live App:**
+*Add your deployed application URL here if available.*
+
 ---
 
-## 📸 What the Demo Shows
+## 📸 Demo Shows
 
 The demonstration shows:
 
 1. NurseMemo running successfully.
-2. Speech/input being provided to the application.
-3. QVAC loading the required local model.
-4. The transcription being generated.
-5. The resulting AI output displayed in the application.
+2. Speech being provided to the application.
+3. QVAC loading the required model.
+4. Local speech transcription being performed.
+5. The resulting text being displayed in the application.
 
 ---
 
-## 📋 QVAC Requirement Checklist
+## ✅ QVAC Challenge Requirements
 
-| Requirement                       | Status     |
-| --------------------------------- | ---------- |
-| QVAC SDK declared as a dependency | ✅          |
-| QVAC SDK version 0.19.0+          | ✅ `0.19.1` |
-| Uses `loadModel`                  | ✅          |
-| Uses `transcribe`                 | ✅          |
-| AI inference runs on-device       | ✅          |
-| Public GitHub repository          | ✅          |
-| Open-source license               | ✅ MIT      |
-| README with setup instructions    | ✅          |
-| At least 3 commits                | ✅          |
+| Requirement                 | Status     |
+| --------------------------- | ---------- |
+| QVAC SDK dependency         | ✅          |
+| SDK version 0.19.0 or newer | ✅ `0.19.1` |
+| `loadModel` used            | ✅          |
+| `transcribe` used           | ✅          |
+| On-device inference         | ✅          |
+| Public GitHub repository    | ✅          |
+| Open-source license         | ✅ MIT      |
+| Installation instructions   | ✅          |
+| Run instructions            | ✅          |
+| Project documentation       | ✅          |
 
 ---
 
 ## 📄 License
 
-NurseMemo is released under the **MIT License**.
+This project is licensed under the **MIT License**.
 
-See the [`LICENSE`](LICENSE) file for the complete license text.
+See the [`LICENSE`](LICENSE) file for the full license text.
 
 ---
 
-## 🔗 Links
+## 🔗 Resources
 
-**GitHub Repository:**
-https://github.com/chonestradacoc-ctrl/NurseMemo
-
-**QVAC:**
-https://github.com/tetherto/qvac
-
-**QVAC Documentation:**
-https://docs.qvac.tether.io/
+* [QVAC GitHub Repository](https://github.com/tetherto/qvac)
+* [QVAC Documentation](https://docs.qvac.tether.io/)
+* [QVAC Examples](https://github.com/tetherto/qvac-examples)
 
 ---
 
@@ -196,4 +182,4 @@ https://docs.qvac.tether.io/
 
 **chonestradacoc-ctrl**
 
-Built as a local AI application using **Tether's QVAC SDK**.
+Built with **Tether's QVAC SDK**.
