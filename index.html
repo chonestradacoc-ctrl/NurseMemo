@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NurseMemo</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .app {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 38px;
+        }
+
+        header p {
+            color: #6b7280;
+            font-size: 17px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            resize: vertical;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            display: none;
+        }
+
+        .result-box {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .title-box {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-top: 20px;
+        }
+
+        .section h3 {
+            margin-bottom: 10px;
+        }
+
+        .point,
+        .term,
+        .question {
+            background: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+        }
+
+        .answer {
+            margin-top: 6px;
+            color: #374151;
+        }
+
+        .quiz-card {
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 12px;
+        }
+
+        footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 25px;
+            margin-bottom: 40px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header>
+        <h1>🩺 NURSEMEMO</h1>
+        <p>Your notes. Your study assistant. Your device.</p>
+    </header>
+
+    <div class="card">
+
+        <h2>📝 Study Memo</h2>
+
+        <p>
+            Enter your nursing study material below and NurseMemo
+            will turn it into organized notes and practice questions.
+        </p>
+
+        <textarea
+            id="memo"
+            placeholder="Example: The respiratory system is responsible for bringing oxygen into the body and removing carbon dioxide..."
+        ></textarea>
+
+        <button onclick="processMemo()">
+            Generate Study Notes
+        </button>
+
+        <div id="status" class="status"></div>
+
+    </div>
+
+    <div id="transcriptCard" class="card hidden">
+
+        <h2>📄 Your Study Material</h2>
+
+        <div id="transcript" class="result-box"></div>
+
+    </div>
+
+    <div id="notesCard" class="card hidden">
+
+        <h2>📚 Study Notes</h2>
+
+        <div id="studyNotes" class="result-box"></div>
+
+    </div>
+
+    <div id="quizCard" class="card hidden">
+
+        <h2>🧠 Quiz Me</h2>
+
+        <div id="quiz" class="quiz-card"></div>
+
+    </div>
+
+    <footer>
+        🔒 Processed locally with QVAC. Your study material stays on this device.
+        <br><br>
+        NurseMemo is an educational study tool and is not intended for
+        patient documentation, diagnosis, or clinical decision-making.
+    </footer>
+
+</div>
+
+<script>
+
+function escapeHTML(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function formatNotes(text) {
+
+    let clean = text
+        .replace(/\*\*/g, "")
+        .replace(/\*/g, "")
+        .replace(/###/g, "")
+        .trim();
+
+    let title = "";
+    let keyPoints = [];
+    let terms = [];
+
+    const titleMatch = clean.match(/TITLE:\s*(.*?)(?:\n|$)/i);
+
+    if (titleMatch) {
+        title = titleMatch[1].trim();
+    }
+
+    const pointsMatch = clean.match(
+        /KEY POINTS:\s*([\s\S]*?)(?:IMPORTANT TERMS:|KEY TERMS:|$)/i
+    );
+
+    if (pointsMatch) {
+
+        keyPoints = pointsMatch[1]
+            .split("\n")
+            .map(line => line.replace(/^\s*\d+[\.\)]\s*/, "").trim())
+            .filter(Boolean);
+    }
+
+    const termsMatch = clean.match(
+        /(?:IMPORTANT TERMS|KEY TERMS):\s*([\s\S]*)/i
+    );
+
+    if (termsMatch) {
+
+        terms = termsMatch[1]
+            .split("\n")
+            .map(line => line.replace(/^\s*\d+[\.\)]\s*/, "").trim())
+            .filter(Boolean);
+    }
+
+    let html = "";
+
+    if (title) {
+        html += `
+            <div class="title-box">
+                📌 ${escapeHTML(title)}
+            </div>
+        `;
+    }
+
+    if (keyPoints.length > 0) {
+
+        html += `
+            <div class="section">
+                <h3>📌 Key Points</h3>
+        `;
+
+        keyPoints.forEach(point => {
+
+            html += `
+                <div class="point">
+                    ${escapeHTML(point)}
+                </div>
+            `;
+        });
+
+        html += `</div>`;
+    }
+
+    if (terms.length > 0) {
+
+        html += `
+            <div class="section">
+                <h3>📖 Important Terms</h3>
+        `;
+
+        terms.forEach(term => {
+
+            html += `
+                <div class="term">
+                    ${escapeHTML(term)}
+                </div>
+            `;
+        });
+
+        html += `</div>`;
+    }
+
+    if (!html) {
+        html = `<div>${escapeHTML(clean)}</div>`;
+    }
+
+    return html;
+}
+
+
+function formatQuiz(text) {
+
+    let clean = text
+        .replace(/\*\*/g, "")
+        .replace(/\*/g, "")
+        .trim();
+
+    const blocks = clean.split(/\n\s*\n/);
+
+    let html = "";
+
+    blocks.forEach(block => {
+
+        const match = block.match(
+            /^\s*(\d+)\.\s*([\s\S]*?)\s*Answer:\s*([\s\S]*)$/i
+        );
+
+        if (!match) {
+            return;
+        }
+
+        const number = match[1];
+        const question = match[2].trim();
+        const answer = match[3].trim();
+
+        html += `
+            <div class="question">
+                <strong>${number}. ${escapeHTML(question)}</strong>
+
+                <div class="answer">
+                    <strong>Answer:</strong>
+                    ${escapeHTML(answer)}
+                </div>
+            </div>
+        `;
+    });
+
+    if (!html) {
+        html = `<div>${escapeHTML(clean)}</div>`;
+    }
+
+    return html;
+}
+
+
+async function processMemo() {
+
+    const memo = document.getElementById("memo").value.trim();
+
+    const status = document.getElementById("status");
+
+    const transcriptCard =
+        document.getElementById("transcriptCard");
+
+    const notesCard =
+        document.getElementById("notesCard");
+
+    const quizCard =
+        document.getElementById("quizCard");
+
+    if (!memo) {
+
+        status.style.display = "block";
+        status.textContent = "⚠️ Please enter your study material first.";
+
+        return;
+    }
+
+    status.style.display = "block";
+    status.textContent = "🧠 Processing your memo with QVAC...";
+
+    transcriptCard.classList.add("hidden");
+    notesCard.classList.add("hidden");
+    quizCard.classList.add("hidden");
+
+    try {
+
+        const response = await fetch("/process", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                text: memo
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Processing failed.");
+        }
+
+        document.getElementById("transcript").textContent =
+            data.transcript;
+
+        document.getElementById("studyNotes").innerHTML =
+            formatNotes(data.studyNotes);
+
+        document.getElementById("quiz").innerHTML =
+            formatQuiz(data.quiz);
+
+        transcriptCard.classList.remove("hidden");
+        notesCard.classList.remove("hidden");
+        quizCard.classList.remove("hidden");
+
+        status.textContent =
+            "✅ Memo processed successfully with QVAC.";
+
+    } catch (error) {
+
+        status.textContent =
+            "❌ " + error.message;
+    }
+}
+
+</script>
+
+</body>
+</html>

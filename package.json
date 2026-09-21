@@ -1,0 +1,22 @@
+{
+  "name": "nursememo-qvac",
+  "version": "1.0.0",
+  "description": "NurseMemo is a local nursing study assistant powered by Tether QVAC.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "cli": "node cli.js"
+  },
+  "keywords": [
+    "nursing",
+    "study-tool",
+    "qvac",
+    "on-device-ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@qvac/sdk": "^0.19.1",
+    "express": "^5.1.0"
+  }
+}
